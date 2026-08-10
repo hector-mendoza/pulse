@@ -35,6 +35,23 @@ export async function signUpWithPassword(prevState, formData) {
   };
 }
 
+export async function requestPasswordReset(prevState, formData) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    formData.get("email"),
+    {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm?next=/auth/reset-password`,
+    }
+  );
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { message: "Check your inbox for a password reset link." };
+}
+
 export async function signInWithMagicLink(prevState, formData) {
   const supabase = await createClient();
 
