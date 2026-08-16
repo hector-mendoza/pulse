@@ -34,6 +34,10 @@ export const metadata = {
     statusBarStyle: "default",
     title: "Pulse",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const viewport = {

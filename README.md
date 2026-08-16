@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pulse
 
-## Getting Started
+A mobile-first PWA dashboard for monitoring your Vercel deployments and Web
+Analytics — installable to your phone's home screen, no App Store required.
+Personal tool, single Vercel account per user.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router), plain JavaScript — no TypeScript
+- **Supabase** — Auth (email/password + magic link), Postgres with RLS,
+  Vault for encrypting the stored Vercel access token
+- **Vercel REST API** — real projects, deployments, and Web Analytics
+- Tailwind CSS v4, shadcn/ui, `@animateicons/react`
+- PWA: dynamically generated manifest + icons (`next/og`), a minimal service
+  worker (static assets only, production-only)
+
+## Getting started
 
 ```bash
+npm install
+cp .env.local.example .env.local   # fill in the values below
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment variables
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Variable | Where to find it |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Dashboard → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → API Keys → "publishable" key (`sb_publishable_...`) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → API Keys → "secret" key (`sb_secret_...`) — server-only, never exposed to the browser |
+| `NEXT_PUBLIC_SITE_URL` | The app's own URL (`http://localhost:3000` locally). Feeds auth email redirects — **must be the real production URL when deployed**, or magic link / password reset will break. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Database schema and RLS policies live in `supabase/migrations/` — apply them
+with `npx supabase db push` after linking the project (`npx supabase link`).
 
-## Learn More
+### Connecting Vercel
 
-To learn more about Next.js, take a look at the following resources:
+Sign in, then go to Settings and paste a
+[personal access token](https://vercel.com/account/tokens). It's verified
+against the Vercel API, then encrypted via Supabase Vault — the plaintext
+token never reaches the browser and is only decrypted server-side.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev      # start the dev server
+npm run build    # production build
+npm run start    # serve the production build
+npm run lint     # eslint
+```
 
-## Deploy on Vercel
+## Deploying
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Import this repo into a new Vercel project.
+2. Set the environment variables above in the Vercel project's settings
+   (`NEXT_PUBLIC_SITE_URL` set to the real deployed URL).
+3. In Supabase → Authentication → URL Configuration, add the deployed URL to
+   the allowed redirect URLs.
