@@ -49,6 +49,9 @@ export async function signUpWithPassword(prevState, formData) {
   const { error } = await supabase.auth.signUp({
     email,
     password: formData.get("password"),
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
+    },
   });
 
   if (error) {
