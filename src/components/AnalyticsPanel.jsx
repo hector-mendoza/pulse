@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { NavIcon } from "@/components/icons";
 import { EmptyState } from "@/components/EmptyState";
+import { AnalyticsSkeleton } from "@/components/skeletons/AnalyticsSkeleton";
 import { cn } from "@/lib/utils";
 
 export function AnalyticsPanel({ projects }) {
@@ -73,11 +74,7 @@ export function AnalyticsPanel({ projects }) {
         ))}
       </div>
 
-      {isLoading && (
-        <div className="rounded-2xl border border-panel-border bg-panel p-8 text-center text-[13px] text-text-dim">
-          Loading analytics…
-        </div>
-      )}
+      {isLoading && <AnalyticsSkeleton />}
 
       {!isLoading && state.status === "error" && (
         <div className="rounded-2xl border border-status-error/30 bg-status-error/8 p-5 text-[13px] text-status-error">
