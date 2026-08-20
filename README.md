@@ -7,7 +7,7 @@ Personal tool, single Vercel account per user.
 ## Stack
 
 - **Next.js 16** (App Router), plain JavaScript — no TypeScript
-- **Supabase** — Auth (email/password + magic link), Postgres with RLS,
+- **Supabase** — Auth (email/password, magic link, GitHub), Postgres with RLS,
   Vault for encrypting the stored Vercel access token
 - **Vercel REST API** — real projects, deployments, and Web Analytics
 - Tailwind CSS v4, shadcn/ui, `@animateicons/react`
@@ -34,6 +34,24 @@ npm run dev
 Database schema and RLS policies live in `supabase/migrations/` — apply them
 with `npx supabase db push` after linking the project (`npx supabase link`).
 
+Auth emails (signup confirmation, magic links, password resets) use Supabase's
+built-in templates. If a **Send Email** Auth Hook was previously pointed at
+this app (`/api/auth/send-email`), delete that hook in
+[Auth Hooks](https://supabase.com/dashboard/project/_/auth/hooks) so the
+default mailer is used again.
+
+### GitHub sign-in
+
+1. Create a GitHub OAuth App at
+   [github.com/settings/developers](https://github.com/settings/developers).
+   Set the Authorization callback URL to your project's
+   `https://<project-ref>.supabase.co/auth/v1/callback`
+   (copied from Supabase → Authentication → Sign In / Providers → GitHub).
+2. Enable GitHub under Supabase → Authentication → Providers and paste the
+   Client ID and Client Secret.
+3. In Supabase → Authentication → URL Configuration, add
+   `{NEXT_PUBLIC_SITE_URL}/auth/callback**` to the allowed redirect URLs.
+
 ### Connecting Vercel
 
 Sign in, then go to Settings and paste a
@@ -55,5 +73,7 @@ npm run lint     # eslint
 1. Import this repo into a new Vercel project.
 2. Set the environment variables above in the Vercel project's settings
    (`NEXT_PUBLIC_SITE_URL` set to the real deployed URL).
-3. In Supabase → Authentication → URL Configuration, add the deployed URL to
-   the allowed redirect URLs.
+3. In Supabase → Authentication → URL Configuration, add the deployed URL
+   (and `{deployed URL}/auth/callback**`) to the allowed redirect URLs.
+4. If you previously used a custom Send Email hook, delete it so confirmation
+   and reset emails go through Supabase's default mailer.
