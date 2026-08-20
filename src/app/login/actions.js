@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl, safeNextPath } from "@/lib/supabase/env";
 import { checkRateLimit, getClientIp, RATE_LIMIT_MESSAGE } from "@/lib/rate-limit";
 
 export async function signInWithPassword(prevState, formData) {
@@ -50,7 +51,7 @@ export async function signUpWithPassword(prevState, formData) {
     email,
     password: formData.get("password"),
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
+      emailRedirectTo: `${getSiteUrl()}/auth/confirm`,
     },
   });
 
@@ -79,7 +80,7 @@ export async function requestPasswordReset(prevState, formData) {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm?next=/auth/reset-password`,
+    redirectTo: `${getSiteUrl()}/auth/confirm?next=/auth/reset-password`,
   });
 
   if (error) {
@@ -107,7 +108,7 @@ export async function signInWithMagicLink(prevState, formData) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
+      emailRedirectTo: `${getSiteUrl()}/auth/confirm`,
     },
   });
 
@@ -116,4 +117,36 @@ export async function signInWithMagicLink(prevState, formData) {
   }
 
   return { message: "Check your inbox for the magic link." };
+}
+
+export async function signInWithGitHub(prevState, formData) {
+  const ip = await getClientIp();
+  const ipOk = await checkRateLimit(ip, "github", {
+    maxAttempts: 10,
+    windowMinutes: 15,
+  });
+
+  if (!ipOk) {
+    return { error: RATE_LIMIT_MESSAGE };
+  }
+
+  const next = safeNextPath(formData?.get("next"));
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: `${getSiteUrl()}/auth/callback?next=${encodeURIComponent(next)}`,
+      skipBrowserRedirect: true,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  if (data?.url) {
+    redirect(data.url);
+  }
+
+  return { error: "GitHub sign-in is not available right now." };
 }
