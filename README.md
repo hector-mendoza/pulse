@@ -29,7 +29,7 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Dashboard → Project Settings → API |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → API Keys → "publishable" key (`sb_publishable_...`) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → API Keys → "secret" key (`sb_secret_...`) — server-only, never exposed to the browser |
-| `NEXT_PUBLIC_SITE_URL` | The app's own URL (`http://localhost:3000` locally). Feeds auth email redirects — **must be the real production URL when deployed**, or magic link / password reset will break. |
+| `NEXT_PUBLIC_SITE_URL` | The app's own URL, including the scheme (`http://localhost:3000` locally, `https://pulse.hectormendoza.me` in production). Feeds auth redirects — **must include `https://`**, or GitHub/magic-link callbacks get appended onto `*.supabase.co` and fail. |
 
 Database schema and RLS policies live in `supabase/migrations/` — apply them
 with `npx supabase db push` after linking the project (`npx supabase link`).
@@ -42,15 +42,21 @@ default mailer is used again.
 
 ### GitHub sign-in
 
+There are **two different callback URLs**. Mixing them produces
+`No API key found in request`.
+
+| Where | Value |
+| --- | --- |
+| GitHub OAuth App → Redirect URI | `https://<project-ref>.supabase.co/auth/v1/callback` (copy from Supabase → Authentication → Providers → GitHub) |
+| Supabase → Authentication → URL Configuration | `https://pulse.hectormendoza.me/auth/callback**` (Pulse, not Supabase) |
+| Vercel env `NEXT_PUBLIC_SITE_URL` | `https://pulse.hectormendoza.me` |
+
 1. Create a GitHub OAuth App at
    [github.com/settings/developers](https://github.com/settings/developers).
-   Set the Authorization callback URL to your project's
-   `https://<project-ref>.supabase.co/auth/v1/callback`
-   (copied from Supabase → Authentication → Sign In / Providers → GitHub).
+   Set the Redirect URI to the **Supabase** callback above — not the Pulse URL.
 2. Enable GitHub under Supabase → Authentication → Providers and paste the
    Client ID and Client Secret.
-3. In Supabase → Authentication → URL Configuration, add
-   `{NEXT_PUBLIC_SITE_URL}/auth/callback**` to the allowed redirect URLs.
+3. Add the **Pulse** `/auth/callback**` URL to Supabase's redirect allow list.
 
 ### Connecting Vercel
 
@@ -72,7 +78,7 @@ npm run lint     # eslint
 
 1. Import this repo into a new Vercel project.
 2. Set the environment variables above in the Vercel project's settings
-   (`NEXT_PUBLIC_SITE_URL` set to the real deployed URL).
+   (`NEXT_PUBLIC_SITE_URL` set to the real deployed URL, including `https://`).
 3. In Supabase → Authentication → URL Configuration, add the deployed URL
    (and `{deployed URL}/auth/callback**`) to the allowed redirect URLs.
 4. If you previously used a custom Send Email hook, delete it so confirmation
