@@ -106,7 +106,7 @@ export default async function Home() {
             userName={data.userName}
           />
 
-          <div className="mx-auto w-full max-w-[480px] pb-[calc(env(safe-area-inset-bottom)+84px)] lg:max-w-none lg:flex-1 lg:pb-0">
+          <div className="mx-auto w-full max-w-[480px] pb-[calc(env(safe-area-inset-bottom)+96px)] lg:max-w-none lg:flex-1 lg:pb-0">
             <AppHeader
               projectsCount={data.projects.length}
               userEmail={data.userEmail}

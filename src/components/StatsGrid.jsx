@@ -39,7 +39,9 @@ export function StatsGrid({ stats }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 px-5 lg:grid-cols-4 lg:px-0">
+    // No horizontal padding of its own: the surrounding column already sets
+    // the gutter, and adding it here inset the grid twice.
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.label}

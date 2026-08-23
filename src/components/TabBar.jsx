@@ -8,48 +8,44 @@ import { haptic } from "@/lib/haptics";
 
 export function TabBar() {
   const { active, setActive } = useNav();
-  const activeIndex = Math.max(
-    0,
-    NAV_ITEMS.findIndex((tab) => tab.id === active)
-  );
 
   return (
     <nav
-      className="glass fixed inset-x-0 bottom-0 z-30 mx-auto max-w-[480px] border-t border-panel-border px-3 pt-2 pb-[calc(9px+env(safe-area-inset-bottom))] lg:hidden"
+      aria-label="Sections"
+      className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-30 flex justify-center px-5 lg:hidden"
     >
-      <div className="relative grid grid-cols-4">
-        {/* The highlight travels between tabs rather than blinking on and off,
-            so the change reads as movement instead of a repaint. */}
-        <span
-          aria-hidden="true"
-          className="absolute inset-y-0 left-0 rounded-2xl bg-accent transition-transform duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)]"
-          style={{
-            width: `${100 / NAV_ITEMS.length}%`,
-            transform: `translateX(${activeIndex * 100}%)`,
-          }}
-        />
-
+      {/* Floating pill: it hugs its contents and lets the page scroll
+          underneath, so the blur has something to work with. */}
+      <div className="glass lift-shadow pointer-events-auto flex items-center gap-1 rounded-[26px] border border-panel-border p-1.5">
         {NAV_ITEMS.map((tab) => {
           const isActive = active === tab.id;
           return (
             <button
               key={tab.id}
               type="button"
+              aria-label={tab.label}
               aria-current={isActive ? "page" : undefined}
               onClick={() => {
                 if (!isActive) haptic("select");
                 setActive(tab.id);
               }}
               className={cn(
-                "pressable-sm relative z-1 flex flex-col items-center gap-1 rounded-2xl py-1.5",
-                isActive ? "text-primary" : "text-text-faint"
+                "pressable-sm flex h-11 items-center rounded-[20px] px-3.5",
+                "transition-[background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                isActive
+                  ? "bg-accent text-primary"
+                  : "text-text-dim hover:text-foreground"
               )}
             >
               <NavIcon name={tab.icon} size={19} />
+              {/* Only the current section spells itself out. The width
+                  animates, so the pill grows around the label rather than the
+                  text popping into a fixed slot. */}
               <span
                 className={cn(
-                  "text-[10px] tracking-wide transition-all",
-                  isActive ? "font-bold" : "font-semibold"
+                  "overflow-hidden text-[12.5px] font-semibold whitespace-nowrap",
+                  "transition-[max-width,opacity,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isActive ? "max-w-24 pl-1.5 opacity-100" : "max-w-0 pl-0 opacity-0"
                 )}
               >
                 {tab.label}
