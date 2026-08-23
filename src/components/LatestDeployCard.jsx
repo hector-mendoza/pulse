@@ -42,13 +42,13 @@ export function LatestDeployCard({ deploy }) {
           href={deploy.url}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-[12.5px] font-semibold text-primary-foreground"
+          className="pressable mt-4 flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-2.5 text-[12.5px] font-semibold text-primary-foreground"
         >
           View Deployment
           <NavIcon name="ExternalLink" size={13} />
         </a>
       ) : (
-        <div className="mt-4 rounded-lg border border-dashed border-panel-border px-3 py-2 text-center text-[11.5px] text-text-faint">
+        <div className="mt-4 rounded-xl border border-dashed border-panel-border px-3 py-2.5 text-center text-[11.5px] text-text-faint">
           Sample data — connect Vercel to view real deploys
         </div>
       )}

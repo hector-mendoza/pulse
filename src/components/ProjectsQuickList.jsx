@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { NavIcon } from "@/components/icons";
+import { haptic } from "@/lib/haptics";
 
 const ICON_COLORS = [
   "bg-blue-500/12 text-blue-600",
@@ -35,7 +38,9 @@ export function ProjectsQuickList({ projects, deployments }) {
           <Link
             key={project.id}
             href={`/projects/${project.id}`}
-            className="flex items-center gap-3 rounded-lg -mx-1 px-1 py-0.5 hover:bg-accent"
+            transitionTypes={["nav-forward"]}
+            onClick={() => haptic("select")}
+            className="pressable -mx-1.5 flex items-center gap-3 rounded-xl px-1.5 py-1 hover:bg-accent"
           >
             <span
               className={`flex h-8 w-8 flex-none items-center justify-center rounded-lg ${ICON_COLORS[i % ICON_COLORS.length]}`}
@@ -50,6 +55,11 @@ export function ProjectsQuickList({ projects, deployments }) {
                 {lastDeployByProject.get(project.name) || "No deploys yet"}
               </div>
             </div>
+            <NavIcon
+              name="ChevronRight"
+              size={14}
+              className="flex-none text-text-faint"
+            />
           </Link>
         ))}
       </div>

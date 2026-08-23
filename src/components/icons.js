@@ -24,6 +24,18 @@ import {
   SunIcon,
   MoonIcon,
   ArrowLeftIcon,
+  MonitorIcon,
+  CheckIcon,
+  CheckCheckIcon,
+  XIcon,
+  ChevronRightIcon,
+  GitBranchIcon,
+  ActivityIcon,
+  DropletIcon,
+  TriangleAlertIcon,
+  LinkIcon,
+  ServerIcon,
+  LayersIcon,
 } from "@animateicons/react/lucide";
 
 export const ICONS = {
@@ -50,6 +62,18 @@ export const ICONS = {
   Sun: SunIcon,
   Moon: MoonIcon,
   ArrowLeft: ArrowLeftIcon,
+  Monitor: MonitorIcon,
+  Check: CheckIcon,
+  CheckCheck: CheckCheckIcon,
+  X: XIcon,
+  ChevronRight: ChevronRightIcon,
+  GitBranch: GitBranchIcon,
+  Activity: ActivityIcon,
+  Droplet: DropletIcon,
+  TriangleAlert: TriangleAlertIcon,
+  Link: LinkIcon,
+  Server: ServerIcon,
+  Layers: LayersIcon,
 };
 
 export function NavIcon({ name, size = 16, ...props }) {

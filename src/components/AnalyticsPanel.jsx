@@ -45,7 +45,7 @@ export function AnalyticsPanel({ projects }) {
   if (projects.length === 0) {
     return (
       <EmptyState
-        icon="◧"
+        icon="Folder"
         title="No projects yet"
         description="Connect Vercel and deploy a project to see analytics here."
       />
@@ -84,7 +84,7 @@ export function AnalyticsPanel({ projects }) {
 
       {!isLoading && state.status === "ready" && state.data && !state.data.enabled && (
         <EmptyState
-          icon="◧"
+          icon="ChartColumn"
           title="Web Analytics isn't enabled"
           description={`Turn on Web Analytics for ${selectedProject?.name ?? "this project"} in the Vercel dashboard to see visits and top pages here.`}
         />

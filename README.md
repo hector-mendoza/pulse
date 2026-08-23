@@ -14,6 +14,26 @@ Personal tool, single Vercel account per user.
 - PWA: dynamically generated manifest + icons (`next/og`), a minimal service
   worker (static assets only, production-only)
 
+## Appearance
+
+Settings → Appearance controls two independent axes, both stored in
+`localStorage` and applied by an inline script before the first paint:
+
+- **Scheme** — Light, Dark, or Auto (follows the device, and keeps following it
+  as the device flips).
+- **Accent** — one of eight palettes (Mint, Iris, Violet, Cyan, Lime, Sunset,
+  Rose, Mono). Each is four seed colors in `src/app/globals.css`; every other
+  token derives from them via `color-mix`, so adding a palette means one block
+  there plus one entry in `src/lib/accents.js`. Deploy statuses stay semantic
+  (green ready, amber building, red error) regardless of accent.
+
+## Gestures
+
+On touch devices: swipe horizontally to move between tabs, pull down at the top
+of the dashboard to refresh, tap a deployment to open a drag-to-dismiss sheet.
+Navigating into a project uses View Transitions for a directional push, and all
+motion collapses under `prefers-reduced-motion`.
+
 ## Getting started
 
 ```bash

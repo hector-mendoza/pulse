@@ -32,14 +32,14 @@ Views: **Deploys** (stat cards, weekly activity, deploy timeline), **Analytics**
 - Real Vercel REST API integration for projects/deployments (`/v9/projects`, `/v6/deployments`) and Web Analytics (`/v1/query/web-analytics/...`). Web Analytics is opt-in per Vercel project, so the UI must handle the "not enabled for this project" case as a distinct, calm state — not an error.
 - The dashboard's "Team Collaboration" card currently renders fake/mock teammates. Confirmed: this must be removed — Pulse has no real multi-user/team feature, and per-user RLS isolation means there is no "team" to show.
 - Known non-functional placeholders still in the UI: the Domains tab, and the desktop topbar's search input and Mail/Bell icon buttons.
-- Light and dark themes are both first-class and user-toggleable (not just a system-preference passthrough), persisted in localStorage with system-preference as the fallback default.
+- Light and dark themes are both first-class and user-toggleable (not just a system-preference passthrough), persisted in localStorage with system-preference as the fallback default. On top of the scheme, the accent color is user-selectable from a fixed set of palettes; deployment status colors stay semantic and are never re-tinted by the accent.
 - PWA installability is real, not decorative: dynamically generated manifest + icons (via `next/og`, no static placeholder assets), and a minimal service worker that caches static assets only — the app itself is auth-gated and dynamic, so it does not pretend to work offline.
 
 ## Brand Commitments
 
 - Name: **Pulse**.
 - Mark: a green-gradient rounded-square badge with a white/dark ▲ (triangle) glyph — echoes Vercel's own triangle mark since the product is explicitly Vercel-focused.
-- Primary accent: mint green — deep forest green `#0E4B36` in light mode, bright mint `#2FD9A8` in dark mode.
+- Primary accent: mint green — deep forest green `#0E4B36` in light mode, bright mint `#2FD9A8` in dark mode. Mint is the default and the brand's own color; the other selectable accents are a user preference, not alternate brand identities.
 
 ## Evidence on Hand
 
@@ -48,7 +48,7 @@ No marketing content, testimonials, or case studies — this is a personal tool,
 ## Product Principles
 
 1. Real data over mock data — once connected, every dashboard element reflects the user's actual Vercel account; any sample/placeholder data must be clearly labeled as such and never presented as if real.
-2. Native-app feel on the phone — PWA installability, no browser chrome, a fast glance-and-close usage pattern.
+2. Native-app feel on the phone — PWA installability, no browser chrome, a fast glance-and-close usage pattern, and touch interactions that behave the way a native app's do (swipe between tabs, pull to refresh, drag-to-dismiss sheets, motion that respects `prefers-reduced-motion`).
 3. Security-first credential handling — the Vercel token is encrypted at rest, decrypted only server-side, and never logged or exposed to the client.
 4. Dark and light are equally first-class, not an afterthought toggle.
 5. Graceful degradation — not-yet-connected or not-yet-enabled features explain themselves (a "connect Vercel" banner, a "Web Analytics not enabled" state) instead of erroring or silently failing.
