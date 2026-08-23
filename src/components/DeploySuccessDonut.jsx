@@ -17,9 +17,7 @@ export function DeploySuccessDonut({ breakdown }) {
   });
 
   const gradient =
-    total === 0
-      ? "var(--border)"
-      : `conic-gradient(${stops.join(", ")})`;
+    total === 0 ? "var(--rail)" : `conic-gradient(${stops.join(", ")})`;
 
   return (
     <div className="card-shadow rounded-2xl border border-panel-border bg-panel p-4">
@@ -30,7 +28,7 @@ export function DeploySuccessDonut({ breakdown }) {
           style={{ background: gradient }}
         >
           <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-panel">
-            <span className="font-mono text-[17px] font-semibold">
+            <span className="tabular font-mono text-[17px] font-semibold">
               {readyPct}%
             </span>
             <span className="text-[9.5px] text-text-faint">Ready</span>
@@ -50,7 +48,7 @@ export function DeploySuccessDonut({ breakdown }) {
                 />
                 {s.label}
               </span>
-              <span className="font-mono text-text-faint">
+              <span className="tabular font-mono text-text-faint">
                 {counts[s.key]}
               </span>
             </div>

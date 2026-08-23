@@ -1,9 +1,11 @@
+import { ViewTransition } from "react";
 import { NavProvider } from "@/components/NavProvider";
 import { Sidebar } from "@/components/Sidebar";
 import { AppHeader } from "@/components/AppHeader";
 import { DesktopTopbar } from "@/components/DesktopTopbar";
 import { DashboardContent } from "@/components/DashboardContent";
 import { TabBar } from "@/components/TabBar";
+import { PullToRefresh } from "@/components/PullToRefresh";
 import { getUserContext, getDecryptedVercelToken } from "@/lib/user-context";
 import {
   listVercelProjects,
@@ -79,33 +81,52 @@ export default async function Home() {
   const latestDeploy = latestDeployment(data.deployments);
 
   return (
-    <NavProvider>
-      <div className="lg:flex lg:min-h-screen lg:gap-3">
-        <Sidebar
-          projects={data.projects}
-          hasVercelToken={data.hasVercelToken}
-          userEmail={data.userEmail}
-          userName={data.userName}
-        />
-
-        <div className="mx-auto w-full max-w-[480px] pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom)+84px)] lg:max-w-none lg:flex-1 lg:pt-0 lg:pb-0">
-          <AppHeader
-            projectsCount={data.projects.length}
+    // Directional slides make a push into a project feel like moving forward
+    // and the back link feel like returning. Untyped navigations (browser
+    // back, refresh) fall through to no animation.
+    <ViewTransition
+      enter={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "none",
+      }}
+      exit={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "none",
+      }}
+      default="none"
+    >
+      <NavProvider>
+        <div className="lg:flex lg:min-h-screen lg:gap-3">
+          <Sidebar
+            projects={data.projects}
+            hasVercelToken={data.hasVercelToken}
             userEmail={data.userEmail}
             userName={data.userName}
           />
-          <DesktopTopbar projects={data.projects} />
-          <DashboardContent
-            {...data}
-            stats={stats}
-            weeklyActivity={weeklyActivity}
-            successBreakdown={successBreakdown}
-            latestDeploy={latestDeploy}
-          />
-        </div>
-      </div>
 
-      <TabBar />
-    </NavProvider>
+          <div className="mx-auto w-full max-w-[480px] pb-[calc(env(safe-area-inset-bottom)+96px)] lg:max-w-none lg:flex-1 lg:pb-0">
+            <AppHeader
+              projectsCount={data.projects.length}
+              userEmail={data.userEmail}
+              userName={data.userName}
+            />
+            <DesktopTopbar projects={data.projects} />
+            <PullToRefresh>
+              <DashboardContent
+                {...data}
+                stats={stats}
+                weeklyActivity={weeklyActivity}
+                successBreakdown={successBreakdown}
+                latestDeploy={latestDeploy}
+              />
+            </PullToRefresh>
+          </div>
+        </div>
+
+        <TabBar />
+      </NavProvider>
+    </ViewTransition>
   );
 }

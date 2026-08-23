@@ -22,7 +22,7 @@ export function Sidebar({ projects, hasVercelToken, userEmail, userName }) {
   return (
     <aside className="hidden lg:sticky lg:top-3 lg:my-3 lg:ml-3 lg:flex lg:h-[calc(100vh-1.5rem)] lg:w-64 lg:flex-none lg:flex-col lg:rounded-2xl lg:border lg:border-panel-border lg:bg-panel lg:px-3 lg:py-5 lg:shadow-[0_1px_2px_rgba(0,0,0,0.06),0_16px_32px_-12px_rgba(0,0,0,0.14)]">
       <div className="mb-8 flex items-center gap-2.5 px-2">
-        <div className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-gradient-to-br from-brand to-[#15A87E] font-mono text-sm font-bold text-brand-foreground">
+        <div className="brand-mark flex h-[30px] w-[30px] items-center justify-center rounded-[10px] font-mono text-sm font-bold">
           ▲
         </div>
         <h1 className="text-[16px] font-semibold tracking-tight">Pulse</h1>
@@ -75,8 +75,9 @@ export function Sidebar({ projects, hasVercelToken, userEmail, userName }) {
           <Link
             key={project.id}
             href={`/projects/${project.id}`}
+            transitionTypes={["nav-forward"]}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left font-mono text-[12.5px] text-text-dim hover:text-foreground",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left font-mono text-[12.5px] text-text-dim transition-colors hover:bg-accent hover:text-foreground",
               pathname === `/projects/${project.id}` &&
                 "bg-accent font-semibold text-primary"
             )}
@@ -103,14 +104,14 @@ export function Sidebar({ projects, hasVercelToken, userEmail, userName }) {
             <button
               type="button"
               onClick={() => setActive("settings")}
-              className="flex items-center justify-center gap-1.5 rounded-lg bg-primary-foreground px-3 py-2 text-[12.5px] font-semibold text-primary"
+              className="pressable flex items-center justify-center gap-1.5 rounded-lg bg-primary-foreground px-3 py-2 text-[12.5px] font-semibold text-primary"
             >
               Connect
             </button>
           ) : (
             <Link
               href="/"
-              className="flex items-center justify-center gap-1.5 rounded-lg bg-primary-foreground px-3 py-2 text-[12.5px] font-semibold text-primary"
+              className="pressable flex items-center justify-center gap-1.5 rounded-lg bg-primary-foreground px-3 py-2 text-[12.5px] font-semibold text-primary"
             >
               Connect
             </Link>

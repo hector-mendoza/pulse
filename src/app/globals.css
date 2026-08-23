@@ -59,6 +59,75 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ---------------------------------------------------------------------------
+   Accent palettes.
+
+   Each accent contributes four seed values; every themed token below is
+   derived from them, so adding an accent means adding one block here and one
+   entry in `src/lib/accents.js`.
+
+   --seed-deep    solid accent used as `--primary` in light mode
+   --seed-bright  luminous accent used as `--primary` in dark mode
+   --seed-*-ink   text/icon color that sits on top of the matching seed
+--------------------------------------------------------------------------- */
+
+:root,
+[data-accent="mint"] {
+  --seed-deep: #0e4b36;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #2fd9a8;
+  --seed-bright-ink: #04140f;
+}
+
+[data-accent="iris"] {
+  --seed-deep: #4338ca;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #8b93ff;
+  --seed-bright-ink: #0b0a2a;
+}
+
+[data-accent="violet"] {
+  --seed-deep: #6d28d9;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #c084fc;
+  --seed-bright-ink: #1b0b2e;
+}
+
+[data-accent="rose"] {
+  --seed-deep: #be123c;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #fb7185;
+  --seed-bright-ink: #2b0710;
+}
+
+[data-accent="sunset"] {
+  --seed-deep: #c2410c;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #fb923c;
+  --seed-bright-ink: #24100a;
+}
+
+[data-accent="cyan"] {
+  --seed-deep: #0e7490;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #22d3ee;
+  --seed-bright-ink: #052a33;
+}
+
+[data-accent="lime"] {
+  --seed-deep: #4d7c0f;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #a3e635;
+  --seed-bright-ink: #16200a;
+}
+
+[data-accent="mono"] {
+  --seed-deep: #111827;
+  --seed-deep-ink: #ffffff;
+  --seed-bright: #e5e7eb;
+  --seed-bright-ink: #0b0d10;
+}
+
 :root {
   --background: #f6f7f9;
   --foreground: #12151a;
@@ -66,32 +135,35 @@
   --card-foreground: #12151a;
   --popover: #ffffff;
   --popover-foreground: #12151a;
-  --primary: #0e4b36;
-  --primary-foreground: #ffffff;
-  --secondary: #edf3f0;
-  --secondary-foreground: #0e4b36;
   --muted: #f1f2f4;
   --muted-foreground: #6b7280;
-  --accent: #eaf7f1;
-  --accent-foreground: #0e4b36;
   --destructive: #e5484d;
   --border: #e9ebee;
   --input: #e9ebee;
-  --ring: #16a34a;
-  --chart-1: #16a34a;
-  --chart-2: #34d399;
+  --radius: 0.875rem;
+
+  /* Accent-derived */
+  --primary: var(--seed-deep);
+  --primary-foreground: var(--seed-deep-ink);
+  --secondary: color-mix(in oklab, var(--seed-deep) 8%, #ffffff);
+  --secondary-foreground: var(--seed-deep);
+  --accent: color-mix(in oklab, var(--seed-deep) 10%, #ffffff);
+  --accent-foreground: var(--seed-deep);
+  --ring: var(--seed-deep);
+  --chart-1: var(--seed-deep);
+  --chart-2: color-mix(in oklab, var(--seed-bright) 70%, #ffffff);
   --chart-3: #f59e0b;
   --chart-4: #e5484d;
   --chart-5: #94a3b8;
-  --radius: 0.875rem;
+
   --sidebar: #ffffff;
   --sidebar-foreground: #12151a;
-  --sidebar-primary: #0e4b36;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #edf3f0;
-  --sidebar-accent-foreground: #0e4b36;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: #e9ebee;
-  --sidebar-ring: #16a34a;
+  --sidebar-ring: var(--ring);
 
   --panel: #ffffff;
   --panel-border: #e9ebee;
@@ -103,8 +175,26 @@
   --text-dim: #6b7280;
   --text-faint: #9ca3af;
 
-  --brand: #2fd9a8;
-  --brand-foreground: #04140f;
+  --brand: var(--seed-bright);
+  --brand-foreground: var(--seed-bright-ink);
+  --brand-deep: var(--seed-deep);
+
+  /* Elevation */
+  --shadow-card:
+    0 1px 2px rgba(16, 20, 28, 0.05), 0 10px 24px -12px rgba(16, 20, 28, 0.14);
+  --shadow-lift:
+    0 2px 6px rgba(16, 20, 28, 0.07), 0 20px 40px -18px rgba(16, 20, 28, 0.22);
+  --shadow-sheet: 0 -8px 48px -12px rgba(16, 20, 28, 0.28);
+  --scrim: rgba(12, 16, 22, 0.34);
+
+  /* Motion */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+
+  color-scheme: light;
 }
 
 .dark {
@@ -114,31 +204,29 @@
   --card-foreground: #e7eaee;
   --popover: #12151a;
   --popover-foreground: #e7eaee;
-  --primary: #2fd9a8;
-  --primary-foreground: #04140f;
-  --secondary: #1e232b;
-  --secondary-foreground: #e7eaee;
   --muted: #1e232b;
   --muted-foreground: #7b8493;
-  --accent: #16241d;
-  --accent-foreground: #2fd9a8;
   --destructive: #ff5d5d;
   --border: #1e232b;
   --input: #1e232b;
-  --ring: #2fd9a8;
-  --chart-1: #2fd9a8;
-  --chart-2: #34d399;
+
+  /* Accent-derived */
+  --primary: var(--seed-bright);
+  --primary-foreground: var(--seed-bright-ink);
+  --secondary: #1e232b;
+  --secondary-foreground: #e7eaee;
+  --accent: color-mix(in oklab, var(--seed-bright) 14%, #12151a);
+  --accent-foreground: var(--seed-bright);
+  --ring: var(--seed-bright);
+  --chart-1: var(--seed-bright);
+  --chart-2: color-mix(in oklab, var(--seed-bright) 62%, #12151a);
   --chart-3: #f5a623;
   --chart-4: #ff5d5d;
   --chart-5: #6e7a8a;
+
   --sidebar: #12151a;
   --sidebar-foreground: #e7eaee;
-  --sidebar-primary: #2fd9a8;
-  --sidebar-primary-foreground: #04140f;
-  --sidebar-accent: #1e232b;
-  --sidebar-accent-foreground: #e7eaee;
   --sidebar-border: #1e232b;
-  --sidebar-ring: #2fd9a8;
 
   --panel: #12151a;
   --panel-border: #1e232b;
@@ -150,20 +238,51 @@
   --text-dim: #7b8493;
   --text-faint: #4a515c;
 
-  --brand: #2fd9a8;
-  --brand-foreground: #04140f;
+  --brand: var(--seed-bright);
+  --brand-foreground: var(--seed-bright-ink);
+  --brand-deep: var(--seed-deep);
+
+  --shadow-card:
+    0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lift:
+    0 2px 6px rgba(0, 0, 0, 0.45), 0 24px 44px -18px rgba(0, 0, 0, 0.7);
+  --shadow-sheet: 0 -8px 48px -12px rgba(0, 0, 0, 0.7);
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
+    /* Keep iOS from resizing type when the device rotates. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Native-app touch behaviour: no grey flash, no rubber-band chaining to
+       the browser UI, no accidental text selection while swiping. */
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Chrome (nav, headers, controls) shouldn't select on a long press the way
+     content does. */
+  nav,
+  header,
+  button,
+  [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   button:not(:disabled),
   [role="button"]:not(:disabled),
   a,
@@ -171,18 +290,124 @@
   summary {
     cursor: pointer;
   }
+
   button:disabled {
     cursor: not-allowed;
   }
+
+  /* Only show focus rings for keyboard users — a tap shouldn't leave a ring
+     behind on a phone. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
 }
+
+/* --------------------------------------------------------------------------
+   Utilities
+--------------------------------------------------------------------------- */
+
+@utility card-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+@utility lift-shadow {
+  box-shadow: var(--shadow-lift);
+}
+
+/* Springy press feedback — the single most "native" cue on touch. */
+@utility pressable {
+  transition:
+    transform var(--dur-fast) var(--ease-out-quint),
+    opacity var(--dur-fast) var(--ease-out-quint),
+    background-color var(--dur-fast) var(--ease-out-quint),
+    border-color var(--dur-fast) var(--ease-out-quint);
+  touch-action: manipulation;
+
+  &:active {
+    transform: scale(0.972);
+  }
+}
+
+@utility pressable-sm {
+  transition:
+    transform var(--dur-fast) var(--ease-out-quint),
+    opacity var(--dur-fast) var(--ease-out-quint),
+    color var(--dur-fast) var(--ease-out-quint);
+  touch-action: manipulation;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Fades the edges of a horizontal scroller so cut-off pills read as
+   "there's more", not "the layout broke". */
+@utility edge-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 14px,
+    #000 calc(100% - 22px),
+    transparent 100%
+  );
+}
+
+@utility glass {
+  /* Opaque enough to stay readable on its own: browsers that skip
+     backdrop-filter (or drop it under load) must not let content bleed
+     through the chrome. */
+  background-color: color-mix(in oklab, var(--panel) 90%, transparent);
+  /* Unprefixed only: the build step adds `-webkit-` for the targets that need
+     it, and hand-writing both makes it collapse the two into the prefixed
+     form alone — which newer Chromium no longer understands. */
+  backdrop-filter: saturate(180%) blur(20px);
+
+  @supports (backdrop-filter: blur(1px)) {
+    background-color: color-mix(in oklab, var(--panel) 80%, transparent);
+  }
+}
+
+@utility brand-mark {
+  background-image: linear-gradient(
+    150deg,
+    var(--brand) 0%,
+    var(--brand-deep) 100%
+  );
+  color: var(--brand-foreground);
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+--------------------------------------------------------------------------- */
 
 @keyframes status-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--status-building) 40%, transparent);
   }
   50% {
-    box-shadow: 0 0 0 5px rgba(245, 166, 35, 0);
+    box-shadow: 0 0 0 5px transparent;
   }
 }
 
@@ -190,8 +415,157 @@
   animation: status-pulse 1.4s ease-in-out infinite;
 }
 
-@utility card-shadow {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 10px 24px -10px rgba(0, 0, 0, 0.1);
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pane-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pane-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Direction encodes which way the user swiped: content enters from the side
+   they pulled it in from. */
+.pane-forward {
+  animation: pane-in-left var(--dur-base) var(--ease-out-quint) both;
+}
+
+.pane-back {
+  animation: pane-in-right var(--dur-base) var(--ease-out-quint) both;
+}
+
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sheet-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   View transitions (dashboard <-> project detail)
+--------------------------------------------------------------------------- */
+
+::view-transition {
+  /* Let taps land on the live page instead of the transition overlay. */
+  pointer-events: none;
+}
+
+::view-transition-old(.nav-forward) {
+  --slide-offset: -56px;
+  animation:
+    140ms ease-in both vt-fade reverse,
+    360ms var(--ease-out-quint) both vt-slide reverse;
+}
+
+::view-transition-new(.nav-forward) {
+  --slide-offset: 56px;
+  animation:
+    200ms ease-out 120ms both vt-fade,
+    360ms var(--ease-out-quint) both vt-slide;
+}
+
+::view-transition-old(.nav-back) {
+  --slide-offset: 56px;
+  animation:
+    140ms ease-in both vt-fade reverse,
+    360ms var(--ease-out-quint) both vt-slide reverse;
+}
+
+::view-transition-new(.nav-back) {
+  --slide-offset: -56px;
+  animation:
+    200ms ease-out 120ms both vt-fade,
+    360ms var(--ease-out-quint) both vt-slide;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vt-slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
 }

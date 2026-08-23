@@ -8,14 +8,14 @@ export function StatsGrid({ stats }) {
       value: stats.totalProjects,
       caption: "Connected to Vercel",
       icon: "Folder",
-      dark: true,
+      feature: true,
     },
     {
       label: "Deploys Today",
       value: stats.deploysToday,
       caption: "Across all projects",
       icon: "Rocket",
-      badge: "bg-blue-500/12 text-blue-600",
+      badge: "bg-accent text-accent-foreground",
     },
     {
       label: "Ready",
@@ -29,37 +29,44 @@ export function StatsGrid({ stats }) {
       label: "Errors",
       value: stats.errors,
       caption: "Need attention",
-      icon: "TrendingUp",
+      icon: stats.errors > 0 ? "TriangleAlert" : "CheckCheck",
       accent: stats.errors > 0 ? "text-status-error" : undefined,
-      badge: "bg-status-error/12 text-status-error",
+      badge:
+        stats.errors > 0
+          ? "bg-status-error/12 text-status-error"
+          : "bg-status-queued/12 text-status-queued",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 px-5 lg:grid-cols-4 lg:px-0">
+    // No horizontal padding of its own: the surrounding column already sets
+    // the gutter, and adding it here inset the grid twice.
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.label}
           className={cn(
             "card-shadow flex flex-col justify-between rounded-2xl p-4",
-            card.dark
-              ? "bg-primary text-primary-foreground"
+            card.feature
+              ? // The lead card carries the accent so the palette choice is
+                // visible the moment the dashboard opens.
+                "bg-gradient-to-br from-primary to-[color-mix(in_oklab,var(--primary)_82%,var(--foreground))] text-primary-foreground"
               : "border border-panel-border bg-panel"
           )}
         >
           <div className="flex items-center justify-between">
             <span
               className={cn(
-                "text-[12.5px] font-medium",
-                card.dark ? "text-primary-foreground/70" : "text-text-dim"
+                "text-[12.5px] font-medium whitespace-nowrap",
+                card.feature ? "text-primary-foreground/75" : "text-text-dim"
               )}
             >
               {card.label}
             </span>
             <span
               className={cn(
-                "flex h-7 w-7 items-center justify-center rounded-full",
-                card.dark
+                "flex h-7 w-7 flex-none items-center justify-center rounded-full",
+                card.feature
                   ? "bg-primary-foreground/15 text-primary-foreground"
                   : card.badge
               )}
@@ -69,7 +76,7 @@ export function StatsGrid({ stats }) {
           </div>
           <div
             className={cn(
-              "mt-4 font-mono text-[26px] font-semibold",
+              "tabular mt-4 font-mono text-[26px] font-semibold",
               card.accent
             )}
           >
@@ -78,7 +85,7 @@ export function StatsGrid({ stats }) {
           <div
             className={cn(
               "mt-1 text-[11px]",
-              card.dark ? "text-primary-foreground/50" : "text-text-faint"
+              card.feature ? "text-primary-foreground/55" : "text-text-faint"
             )}
           >
             {card.caption}

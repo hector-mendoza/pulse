@@ -7,13 +7,14 @@ const STATUS_BORDER = {
   queued: "border-status-queued",
 };
 
-export function StatusNode({ status }) {
+export function StatusNode({ status, className }) {
   return (
     <div
       className={cn(
-        "mt-[3px] h-3.5 w-3.5 flex-none rounded-full border-2 bg-panel",
+        "h-3.5 w-3.5 flex-none rounded-full border-2 bg-panel",
         STATUS_BORDER[status],
-        status === "building" && "animate-status-pulse"
+        status === "building" && "animate-status-pulse",
+        className
       )}
     />
   );
