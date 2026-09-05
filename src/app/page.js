@@ -8,9 +8,11 @@ import { TabBar } from "@/components/TabBar";
 import { PullToRefresh } from "@/components/PullToRefresh";
 import { getUserContext, getDecryptedVercelToken } from "@/lib/user-context";
 import {
+  formatRelativeTime,
+} from "@/lib/format-relative-time";
+import {
   listVercelProjects,
   listVercelDeployments,
-  formatRelativeTime,
   VercelApiError,
 } from "@/lib/vercel-api";
 import {

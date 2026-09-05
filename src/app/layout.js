@@ -1,6 +1,7 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { ThemeSync } from "@/components/ThemeSync";
+import { BoneyardInit } from "@/components/BoneyardInit";
 import { ACCENT_IDS, DEFAULT_ACCENT } from "@/lib/accents";
 import {
   MODE_KEY,
@@ -93,6 +94,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <BoneyardInit />
         <ThemeSync />
         <ServiceWorkerRegister />
         {children}
