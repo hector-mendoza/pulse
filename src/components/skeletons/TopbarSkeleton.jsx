@@ -3,7 +3,7 @@ import { Skeleton } from "./Skeleton";
 export function TopbarSkeleton() {
   return (
     <>
-      <div className="flex items-center justify-between px-5 pt-2 pb-[18px] lg:hidden">
+      <div className="flex items-center justify-between px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+0.5rem)] lg:hidden">
         <div className="flex items-center gap-2.5">
           <Skeleton className="h-[30px] w-[30px] rounded-lg" />
           <div>

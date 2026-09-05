@@ -8,10 +8,10 @@ import { DeployTimeline } from "@/components/DeployTimeline";
 import { WeeklyActivity } from "@/components/WeeklyActivity";
 import { LatestDeployCard } from "@/components/LatestDeployCard";
 import { getUserContext, getDecryptedVercelToken } from "@/lib/user-context";
+import { formatRelativeTime } from "@/lib/format-relative-time";
 import {
   listVercelProjects,
   listVercelDeployments,
-  formatRelativeTime,
   VercelApiError,
 } from "@/lib/vercel-api";
 import {
