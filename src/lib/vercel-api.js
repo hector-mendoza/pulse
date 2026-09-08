@@ -74,7 +74,7 @@ export async function getWebAnalytics(token, { projectId, sinceDays = 7 } = {}) 
   const range = `since=${since.toISOString()}&until=${until.toISOString()}`;
 
   try {
-    const [summary, trend, topPages, deviceBreakdown] = await Promise.all([
+    const [summary, trend, topPages] = await Promise.all([
       vercelFetch(
         token,
         `/v1/query/web-analytics/visits/count?projectId=${projectId}&${range}`
@@ -86,10 +86,6 @@ export async function getWebAnalytics(token, { projectId, sinceDays = 7 } = {}) 
       vercelFetch(
         token,
         `/v1/query/web-analytics/visits/aggregate?projectId=${projectId}&${range}&by=requestPath&limit=5`
-      ),
-      vercelFetch(
-        token,
-        `/v1/query/web-analytics/visits/aggregate?projectId=${projectId}&${range}&by=deviceType&limit=5`
       ),
     ]);
 
@@ -104,10 +100,6 @@ export async function getWebAnalytics(token, { projectId, sinceDays = 7 } = {}) 
       })),
       topPages: (topPages.data ?? []).map((d) => ({
         path: d.requestPath || "/",
-        pageviews: d.pageviews ?? 0,
-      })),
-      devices: (deviceBreakdown.data ?? []).map((d) => ({
-        type: d.deviceType || "unknown",
         pageviews: d.pageviews ?? 0,
       })),
     };

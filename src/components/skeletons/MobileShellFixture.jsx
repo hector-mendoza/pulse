@@ -5,22 +5,13 @@ import { NavProvider } from "@/components/NavProvider";
 import { AppHeader } from "@/components/AppHeader";
 import { DashboardContent } from "@/components/DashboardContent";
 import { TabBar } from "@/components/TabBar";
-import { projects as mockProjects, deployments as mockDeployments } from "@/lib/mock-data";
-import { formatRelativeTime } from "@/lib/format-relative-time";
+import { projects as mockProjects, hydrateMockDeployments } from "@/lib/mock-data";
 import {
   computeStats,
   computeWeeklyActivity,
   computeSuccessBreakdown,
   latestDeployment,
 } from "@/lib/dashboard-stats";
-
-function hydrateMockDeployments() {
-  const now = Date.now();
-  return mockDeployments.map((d) => {
-    const timestamp = now - d.offsetMs;
-    return { ...d, timestamp, time: formatRelativeTime(timestamp), url: null };
-  });
-}
 
 function MobileShellInner() {
   const projects = mockProjects.filter((p) => p.id !== "all");

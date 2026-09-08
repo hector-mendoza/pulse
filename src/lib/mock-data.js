@@ -1,3 +1,5 @@
+import { formatRelativeTime } from "@/lib/format-relative-time";
+
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
@@ -23,3 +25,11 @@ export const deployments = [
   { id: "c7715e2", message: "feat: dark mode toggle", status: "ready", project: "hectormendoza.me", commit: "c7715e2", offsetMs: 4 * DAY + 6 * HOUR },
   { id: "184fbd6", message: "fix: mobile nav overflow", status: "ready", project: "pille-os", commit: "184fbd6", offsetMs: 5 * DAY + 2 * HOUR },
 ];
+
+export function hydrateMockDeployments() {
+  const now = Date.now();
+  return deployments.map((d) => {
+    const timestamp = now - d.offsetMs;
+    return { ...d, timestamp, time: formatRelativeTime(timestamp), url: null };
+  });
+}

@@ -1,38 +1,50 @@
-# Pulse
+<p align="center">
+  <strong>Pulse</strong>
+</p>
 
-A mobile-first PWA dashboard for monitoring your Vercel deployments and Web
-Analytics — installable to your phone's home screen, no App Store required.
-Personal tool, single Vercel account per user.
+<p align="center">
+  Your Vercel deployments, on your home screen.
+</p>
+
+<p align="center">
+  A mobile-first PWA that turns deployment monitoring into a native-app experience — installable, glanceable, and built for the moment between pushes.
+</p>
+
+---
+
+## Why Pulse
+
+Vercel’s dashboard is built for desktop. Pulse is built for the pocket check: a quick look at what shipped, what failed, and how traffic is moving — without opening a browser tab.
+
+Install it once. Tap the icon. Close it when you’re done.
+
+---
+
+## Highlights
+
+**Home-screen native** — Add to your iPhone or Android home screen. No App Store, no browser chrome. Pulse runs as a standalone app with its own icon and splash.
+
+**Real Vercel data** — Projects, deployments, and Web Analytics pulled live from the Vercel REST API. Connect a personal access token once; everything updates from there.
+
+**Designed for touch** — Swipe between tabs, pull to refresh, drag-to-dismiss sheets, and directional view transitions that respect `prefers-reduced-motion`.
+
+**Your look, your scheme** — Light, dark, or auto. Eight accent palettes, each derived from four seed colors. Deployment statuses stay semantic — green ready, amber building, red error — regardless of accent.
+
+**Security by default** — Vercel tokens are verified, encrypted via Supabase Vault, and decrypted only on the server. Plaintext never reaches the browser.
+
+---
 
 ## Stack
 
-- **Next.js 16** (App Router), plain JavaScript — no TypeScript
-- **Supabase** — Auth (email/password, magic link, GitHub), Postgres with RLS,
-  Vault for encrypting the stored Vercel access token
-- **Vercel REST API** — real projects, deployments, and Web Analytics
-- Tailwind CSS v4, shadcn/ui, `@animateicons/react`
-- PWA: dynamically generated manifest + icons (`next/og`), a minimal service
-  worker (static assets only, production-only)
+| Layer | Technology |
+| --- | --- |
+| Framework | Next.js 16 (App Router), JavaScript |
+| Auth & data | Supabase — email/password, magic link, GitHub OAuth, Postgres with RLS, Vault |
+| Integrations | Vercel REST API — projects, deployments, Web Analytics |
+| UI | Tailwind CSS v4, shadcn/ui, `@animateicons/react` |
+| PWA | Dynamic manifest + icons (`next/og`), production service worker for static assets |
 
-## Appearance
-
-Settings → Appearance controls two independent axes, both stored in
-`localStorage` and applied by an inline script before the first paint:
-
-- **Scheme** — Light, Dark, or Auto (follows the device, and keeps following it
-  as the device flips).
-- **Accent** — one of eight palettes (Mint, Iris, Violet, Cyan, Lime, Sunset,
-  Rose, Mono). Each is four seed colors in `src/app/globals.css`; every other
-  token derives from them via `color-mix`, so adding a palette means one block
-  there plus one entry in `src/lib/accents.js`. Deploy statuses stay semantic
-  (green ready, amber building, red error) regardless of accent.
-
-## Gestures
-
-On touch devices: swipe horizontally to move between tabs, pull down at the top
-of the dashboard to refresh, tap a deployment to open a drag-to-dismiss sheet.
-Navigating into a project uses View Transitions for a directional push, and all
-motion collapses under `prefers-reduced-motion`.
+---
 
 ## Getting started
 
@@ -42,64 +54,67 @@ cp .env.local.example .env.local   # fill in the values below
 npm run dev
 ```
 
+Open [http://localhost:3000](http://localhost:3000).
+
 ### Environment variables
 
 | Variable | Where to find it |
 | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Dashboard → Project Settings → API |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → API Keys → "publishable" key (`sb_publishable_...`) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → API Keys → "secret" key (`sb_secret_...`) — server-only, never exposed to the browser |
-| `NEXT_PUBLIC_SITE_URL` | The app's own URL, including the scheme (`http://localhost:3000` locally, `https://pulse.hectormendoza.me` in production). Feeds auth redirects — **must include `https://`**, or GitHub/magic-link callbacks get appended onto `*.supabase.co` and fail. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → API Keys → publishable key (`sb_publishable_...`) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API Keys → secret key (`sb_secret_...`) — server-only |
+| `NEXT_PUBLIC_SITE_URL` | Your app URL with scheme (`http://localhost:3000` locally). **Must include `https://` in production** — auth redirects depend on it. |
 
-Database schema and RLS policies live in `supabase/migrations/` — apply them
-with `npx supabase db push` after linking the project (`npx supabase link`).
+Apply the database schema from `supabase/migrations/` after linking your project:
 
-Auth emails (signup confirmation, magic links, password resets) use Supabase's
-built-in templates. If a **Send Email** Auth Hook was previously pointed at
-this app (`/api/auth/send-email`), delete that hook in
-[Auth Hooks](https://supabase.com/dashboard/project/_/auth/hooks) so the
-default mailer is used again.
+```bash
+npx supabase link
+npx supabase db push
+```
+
+Auth emails (signup, magic links, password resets) use Supabase’s built-in templates. If a custom Send Email hook was previously pointed at this app, remove it in [Auth Hooks](https://supabase.com/dashboard/project/_/auth/hooks) so the default mailer is used.
 
 ### GitHub sign-in
 
-There are **two different callback URLs**. Mixing them produces
-`No API key found in request`.
+Two callback URLs — mixing them produces `No API key found in request`.
 
 | Where | Value |
 | --- | --- |
-| GitHub OAuth App → Redirect URI | `https://<project-ref>.supabase.co/auth/v1/callback` (copy from Supabase → Authentication → Providers → GitHub) |
-| Supabase → Authentication → URL Configuration | `https://pulse.hectormendoza.me/auth/callback**` (Pulse, not Supabase) |
-| Vercel env `NEXT_PUBLIC_SITE_URL` | `https://pulse.hectormendoza.me` |
+| GitHub OAuth App → Redirect URI | `https://<project-ref>.supabase.co/auth/v1/callback` |
+| Supabase → URL Configuration | `https://your-domain.com/auth/callback**` |
+| Vercel env `NEXT_PUBLIC_SITE_URL` | `https://your-domain.com` |
 
-1. Create a GitHub OAuth App at
-   [github.com/settings/developers](https://github.com/settings/developers).
-   Set the Redirect URI to the **Supabase** callback above — not the Pulse URL.
-2. Enable GitHub under Supabase → Authentication → Providers and paste the
-   Client ID and Client Secret.
-3. Add the **Pulse** `/auth/callback**` URL to Supabase's redirect allow list.
+1. Create a GitHub OAuth App at [github.com/settings/developers](https://github.com/settings/developers). Set the Redirect URI to the **Supabase** callback — not your app URL.
+2. Enable GitHub under Supabase → Authentication → Providers. Paste the Client ID and Secret.
+3. Add your app’s `/auth/callback**` URL to Supabase’s redirect allow list.
 
 ### Connecting Vercel
 
-Sign in, then go to Settings and paste a
-[personal access token](https://vercel.com/account/tokens). It's verified
-against the Vercel API, then encrypted via Supabase Vault — the plaintext
-token never reaches the browser and is only decrypted server-side.
+Sign in, open **Settings**, and paste a [personal access token](https://vercel.com/account/tokens). Pulse verifies it against the Vercel API, then stores it encrypted in Supabase Vault.
+
+---
 
 ## Scripts
 
 ```bash
-npm run dev      # start the dev server
-npm run build    # production build
-npm run start    # serve the production build
-npm run lint     # eslint
+npm run dev              # development server
+npm run build            # production build
+npm run start            # serve production build
+npm run lint             # eslint
+npm run boneyard:build   # regenerate mobile loading skeletons (dev)
 ```
+
+---
 
 ## Deploying
 
 1. Import this repo into a new Vercel project.
-2. Set the environment variables above in the Vercel project's settings
-   (`NEXT_PUBLIC_SITE_URL` set to the real deployed URL, including `https://`).
-3. In Supabase → Authentication → URL Configuration, add the deployed URL
-   (and `{deployed URL}/auth/callback**`) to the allowed redirect URLs.
-4. If you previously used a custom Send Email hook, delete it so confirmation
-   and reset emails go through Supabase's default mailer.
+2. Set all environment variables in the Vercel project settings (`NEXT_PUBLIC_SITE_URL` must match the deployed URL, including `https://`).
+3. In Supabase → Authentication → URL Configuration, add the deployed URL and `{deployed URL}/auth/callback**` to allowed redirect URLs.
+4. Remove any custom Send Email auth hook so confirmation and reset emails use Supabase’s default mailer.
+
+---
+
+<p align="center">
+  <sub>Personal tool. One Vercel account per user. Built for the deploy check, not the full dashboard.</sub>
+</p>

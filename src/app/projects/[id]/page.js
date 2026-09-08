@@ -8,7 +8,6 @@ import { DeployTimeline } from "@/components/DeployTimeline";
 import { WeeklyActivity } from "@/components/WeeklyActivity";
 import { LatestDeployCard } from "@/components/LatestDeployCard";
 import { getUserContext, getDecryptedVercelToken } from "@/lib/user-context";
-import { formatRelativeTime } from "@/lib/format-relative-time";
 import {
   listVercelProjects,
   listVercelDeployments,
@@ -21,16 +20,8 @@ import {
 } from "@/lib/dashboard-stats";
 import {
   projects as mockProjects,
-  deployments as mockDeployments,
+  hydrateMockDeployments,
 } from "@/lib/mock-data";
-
-function hydrateMockDeployments() {
-  const now = Date.now();
-  return mockDeployments.map((d) => {
-    const timestamp = now - d.offsetMs;
-    return { ...d, timestamp, time: formatRelativeTime(timestamp), url: null };
-  });
-}
 
 async function getProjectData(id) {
   const { user, userEmail, userName, vercelToken } = await getUserContext();
