@@ -38,20 +38,6 @@ export function DesktopTopbar({ projects }) {
           {isMac ? "⌘K" : "Ctrl K"}
         </kbd>
 
-        <div className="flex-1" />
-
-        <button
-          type="button"
-          className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-panel-border text-text-dim hover:text-foreground"
-        >
-          <NavIcon name="Mail" size={17} />
-        </button>
-        <button
-          type="button"
-          className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-panel-border text-text-dim hover:text-foreground"
-        >
-          <NavIcon name="Bell" size={17} />
-        </button>
       </div>
 
       {searchOpen && (

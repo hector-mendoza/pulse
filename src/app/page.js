@@ -8,9 +8,6 @@ import { TabBar } from "@/components/TabBar";
 import { PullToRefresh } from "@/components/PullToRefresh";
 import { getUserContext, getDecryptedVercelToken } from "@/lib/user-context";
 import {
-  formatRelativeTime,
-} from "@/lib/format-relative-time";
-import {
   listVercelProjects,
   listVercelDeployments,
   VercelApiError,
@@ -21,15 +18,7 @@ import {
   computeSuccessBreakdown,
   latestDeployment,
 } from "@/lib/dashboard-stats";
-import { projects as mockProjects, deployments as mockDeployments } from "@/lib/mock-data";
-
-function hydrateMockDeployments() {
-  const now = Date.now();
-  return mockDeployments.map((d) => {
-    const timestamp = now - d.offsetMs;
-    return { ...d, timestamp, time: formatRelativeTime(timestamp), url: null };
-  });
-}
+import { projects as mockProjects, hydrateMockDeployments } from "@/lib/mock-data";
 
 async function getDashboardData() {
   const { user, userEmail, userName, vercelToken } = await getUserContext();

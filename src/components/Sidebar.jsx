@@ -10,10 +10,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { avatarUrl } from "@/lib/avatar";
 
-const GENERAL_ITEMS = [
-  { id: "help", icon: "Info", label: "Help" },
-];
-
 export function Sidebar({ projects, hasVercelToken, userEmail, userName }) {
   const { active, setActive } = useNav();
   const pathname = usePathname();
@@ -137,16 +133,6 @@ export function Sidebar({ projects, hasVercelToken, userEmail, userName }) {
           </div>
         </div>
 
-        {GENERAL_ITEMS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13.5px] font-medium text-text-dim transition-colors hover:text-foreground"
-          >
-            <NavIcon name={item.icon} size={17} />
-            {item.label}
-          </button>
-        ))}
         <ThemeToggle className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13.5px] font-medium text-text-dim transition-colors hover:text-foreground" />
         <form action="/auth/signout" method="post">
           <button
