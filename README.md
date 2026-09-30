@@ -64,6 +64,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → API Keys → publishable key (`sb_publishable_...`) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API Keys → secret key (`sb_secret_...`) — server-only |
 | `NEXT_PUBLIC_SITE_URL` | Your app URL with scheme (`http://localhost:3000` locally). **Must include `https://` in production** — auth redirects depend on it. |
+| `CRON_SECRET` | Random secret for the daily Supabase keep-alive cron. Vercel → Project Settings → Environment Variables (or generate with `openssl rand -hex 32`). Required in production so `/api/cron/keepalive` can authenticate. |
 
 Apply the database schema from `supabase/migrations/` after linking your project:
 
@@ -109,9 +110,13 @@ npm run boneyard:build   # regenerate mobile loading skeletons (dev)
 ## Deploying
 
 1. Import this repo into a new Vercel project.
-2. Set all environment variables in the Vercel project settings (`NEXT_PUBLIC_SITE_URL` must match the deployed URL, including `https://`).
+2. Set all environment variables in the Vercel project settings (`NEXT_PUBLIC_SITE_URL` must match the deployed URL, including `https://`). Include `CRON_SECRET` so the keep-alive cron can run.
 3. In Supabase → Authentication → URL Configuration, add the deployed URL and `{deployed URL}/auth/callback**` to allowed redirect URLs.
 4. Remove any custom Send Email auth hook so confirmation and reset emails use Supabase’s default mailer.
+
+### Supabase keep-alive
+
+Free Plan projects pause after ~7 days of low database activity. A Vercel Cron job hits `/api/cron/keepalive` daily at 12:00 UTC and runs a lightweight `profiles` select so the project stays active. Paid plans never auto-pause, so you can remove the cron if you upgrade.
 
 ---
 
